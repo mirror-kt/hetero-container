@@ -1,5 +1,5 @@
 [package]
-name = "typedmap"
+name = "hetero-container"
 version = "0.1.0"
 authors = ["mirror-kt <me@mirror-kt.dev>"]
 edition = "2018"

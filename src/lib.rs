@@ -3,9 +3,9 @@ use std::collections::{HashMap, hash_map};
 use std::collections::hash_map::IterMut;
 
 #[derive(Debug)]
-pub struct TypedMap(pub HashMap<TypeId, Box<dyn Any>>);
+pub struct HeteroContainer(pub HashMap<TypeId, Box<dyn Any>>);
 
-impl TypedMap {
+impl HeteroContainer {
     #[inline]
     pub fn new() -> Self {
         Self(HashMap::new())
@@ -197,7 +197,7 @@ impl <'a> Iterator for Iter<'a> {
     }
 }
 
-impl <'a> IntoIterator for TypedMap {
+impl <'a> IntoIterator for HeteroContainer {
     type Item = (&'a TypeId, &'a Box<dyn Any>);
     type IntoIter = Iter<'a>;
 
