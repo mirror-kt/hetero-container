@@ -3,7 +3,7 @@ use std::collections::{HashMap, hash_map};
 use std::marker::PhantomData;
 
 #[derive(Debug)]
-pub struct HeteroContainer(pub HashMap<TypeId, Box<dyn Any>>);
+pub struct HeteroContainer(HashMap<TypeId, Box<dyn Any>>);
 
 impl HeteroContainer {
     #[inline]
