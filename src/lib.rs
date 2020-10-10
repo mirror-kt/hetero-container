@@ -22,6 +22,11 @@ impl HeteroContainer {
     }
 
     #[inline]
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    #[inline]
     pub fn insert<V: Any>(&mut self, v: V) -> Option<V> {
         self.0.insert(TypeId::of::<V>(), Box::new(v))
             .map(|x| x.downcast().ok())
@@ -58,6 +63,13 @@ impl HeteroContainer {
 
     pub fn iter(&self) -> Iter<'_> {
         Iter { inner: self.0.iter() }
+    }
+
+    #[inline]
+    pub fn iter_mut(&mut self) -> IterMut<'_> {
+        IterMut {
+            inner: self.0.iter_mut()
+        }
     }
 
     #[inline]
@@ -203,5 +215,45 @@ impl <'a> Iterator for Iter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         self.inner
             .next()
+    }
+
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.inner.size_hint()
+    }
+}
+
+impl <'a> IntoIterator for &'a HeteroContainer {
+    type Item = (&'a TypeId, &'a Box<dyn Any>);
+    type IntoIter = Iter<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+pub struct IterMut<'a> {
+    inner: hash_map::IterMut<'a, TypeId, Box<dyn Any>>
+}
+
+impl <'a> Iterator for IterMut<'a> {
+    type Item = (&'a TypeId, &'a mut Box<dyn Any>);
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        self.inner.next()
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.inner.size_hint()
+    }
+}
+
+impl <'a> IntoIterator for &'a mut HeteroContainer {
+    type Item = (&'a TypeId, &'a mut Box<dyn Any>);
+    type IntoIter = IterMut<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
     }
 }
